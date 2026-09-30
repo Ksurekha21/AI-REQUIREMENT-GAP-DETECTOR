@@ -161,87 +161,7 @@ Open your browser at `http://localhost:8501`.
 
 ---
 
-## 9. Sample Inputs & Live Outputs
-
-### Test Case 1: E-Commerce / Food Ordering
-**Input:**
-```text
-Users should be able to order food through the application.
-```
-
-**Output:**
-- 🔴 **HIGH PRIORITY GAPS**:
-  - No definition of the payment flow or supported payment methods.
-  - No handling specified when items become out of stock during checkout.
-  - No behavior defined when a restaurant closes while cart is being built.
-- 🟡 **MEDIUM PRIORITY GAPS**:
-  - No policy for order cancellation or modification after submission.
-  - Delivery address validation and delivery radius boundary handling is omitted.
-- 🟢 **LOW PRIORITY GAPS**:
-  - No past order history view or re-ordering functionality.
-  - No loyalty rewards or promo code application specified.
-- ⚠️ **MISSING DETAILS**:
-  - Supported payment gateways (Credit Card, UPI, Cash on Delivery).
-  - Fee calculation rules (delivery charge, service fee, tips, taxes).
-- 💡 **RECOMMENDATIONS**:
-  - Define a checkout state machine (Pending -> Accepted -> In Kitchen -> Out for Delivery -> Completed).
-  - Establish merchant rejection and automated refund policies.
-
----
-
-### Test Case 2: EdTech / Assignment Submission
-**Input:**
-```text
-Students should be able to submit assignments online.
-```
-
-**Output:**
-- 🔴 **HIGH PRIORITY GAPS**:
-  - Handling of late submissions and deadline cutoff enforcement.
-  - File size and format limits (e.g., PDF, DOCX, ZIP restrictions).
-  - System behavior during network interruptions mid-upload.
-- 🟡 **MEDIUM PRIORITY GAPS**:
-  - Resubmission policy (overwriting existing submissions vs multiple drafts).
-  - Group assignment submission on behalf of peers.
-- 🟢 **LOW PRIORITY GAPS**:
-  - Confirmation receipt and timestamp notification.
-  - Student comments alongside uploaded attachments.
-- ⚠️ **MISSING DETAILS**:
-  - Maximum upload file size limit.
-  - Timezone rules for deadline comparison.
-- 💡 **RECOMMENDATIONS**:
-  - Implement a cryptographic or unique confirmation receipt ID.
-  - Implement virus and malware scanning on uploaded file streams.
-
----
-
-### Test Case 3: FinTech / Banking
-**Input:**
-```text
-Customers should be able to transfer money to another bank account.
-```
-
-**Output:**
-- 🔴 **HIGH PRIORITY GAPS**:
-  - Insufficient funds handling and balance lock.
-  - Transaction limits (per-transaction, daily, and monthly limits).
-  - Authentication and authorization verification (MFA, PIN, or biometric check).
-- 🟡 **MEDIUM PRIORITY GAPS**:
-  - Scheduled/recurring transfer management.
-  - Network timeout or disconnect handling to prevent double-debiting.
-- 🟢 **LOW PRIORITY GAPS**:
-  - Notification preferences for both sender and recipient.
-  - Saving recipient accounts as favorites or templates.
-- ⚠️ **MISSING DETAILS**:
-  - Supported transfer protocols (ACH, Wire, SEPA, SWIFT, Real-Time).
-  - Currency conversion and foreign exchange rate handling.
-- 💡 **RECOMMENDATIONS**:
-  - Build a multi-step transfer confirmation step displaying breakdown of fees.
-  - Implement real-time routing/IBAN format validation before submission.
-
----
-
-## 10. AI Integration Explanation
+## 9. AI Integration Explanation
 
 - **Contextual Reasoning**: The model assesses requirements through a software architecture perspective rather than searching for hardcoded keywords.
 - **JSON Schema Enforcement**: Using `google.genai.types.GenerateContentConfig(response_mime_type="application/json", response_schema=RESPONSE_SCHEMA)`, the LLM is constrained to output JSON matching the application's nine-field response structure.
@@ -249,7 +169,7 @@ Customers should be able to transfer money to another bank account.
 
 ---
 
-## 11. Limitations
+## 10. Limitations
 
 1. **Single-Sentence Ambiguity**: Very brief requirements lack domain constraints (e.g., B2B vs B2C), requiring broader gap suggestions.
 2. **API Quota Constraints**: Relies on third-party API availability, though mitigated by automatic fallback to fast lite models.
@@ -257,26 +177,10 @@ Customers should be able to transfer money to another bank account.
 
 ---
 
-## 12. Future Enhancements
+## 11. Future Enhancements
 
 - **Jira / GitHub Issues Integration**: Directly import requirements from issue trackers.
 - **Export Reports**: Download gap analysis as PDF or Markdown for sprint planning.
 - **Domain Profiles**: Allow users to toggle regulatory presets (e.g., HIPAA for healthcare, PCI-DSS for fintech).
 
 ---
-
-## 13. Interview Preparation Guide (Associate Software Engineer)
-
-Use these talking points when presenting this project in an interview:
-
-### Q1: What problem does this project solve?
-> *"It catches missing edge cases, business rules, and technical requirements before development starts. Fixing an unhandled scenario during requirements review costs a fraction of fixing a bug in production."*
-
-### Q2: Why use Generative AI instead of traditional NLP or regex?
-> *"Requirements are expressed in unstructured natural language. A regex can only search for predefined words like 'payment'. An LLM understands the context of an e-commerce order and reasons that inventory checks, restaurant hours, cancellation policies, and refund logic are also required."*
-
-### Q3: What is Python's role in this application?
-> *"Python coordinates the application workflow: it hosts the Streamlit frontend, manages environment credentials, builds the prompt context, communicates with the Google GenAI SDK, enforces automatic model fallback on server load spikes, validates the JSON structure using Pydantic, and sanitizes output for the user."*
-
-### Q4: How does the application handle AI or API failures?
-> *"It uses defensive exception handling. If the model experiences a 503 high-traffic spike, the system automatically falls back to a lighter model (`gemini-3.5-flash-lite`). If the key is invalid or network fails, typed custom exceptions catch the error and present a clean, friendly message to the user without exposing secrets or crashing."*
