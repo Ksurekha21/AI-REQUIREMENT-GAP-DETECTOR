@@ -21,7 +21,7 @@ Traditional static analysis, regex, and keyword-based AI simulations fail to cat
 
 ## 2. Project Objective
 
-The **AI Requirement Gap Detector** provides software engineering teams, product managers, and business analysts with an automated review assistant. It leverages a real **Generative AI model** to reason about natural-language software requirements and systematically categorize findings into five essential sections before a single line of code is written.
+The **AI Requirement Gap Detector** provides software engineering teams, product managers, and business analysts with an automated review assistant. It leverages a real **Generative AI model** to reason about natural-language software requirements and organize findings into nine sections before a single line of code is written.
 
 ---
 
@@ -62,6 +62,10 @@ The **AI Requirement Gap Detector** provides software engineering teams, product
 |   🟡 MEDIUM PRIORITY GAPS                                 |
 |   🟢 LOW PRIORITY GAPS                                    |
 |   ⚠️ MISSING DETAILS                                      |
+|   🔍 AMBIGUITY DETECTION                                  |
+|   🧪 EDGE-CASE DETECTION                                  |
+|   ❓ CLARIFICATION QUESTIONS                              |
+|   ✨ IMPROVED REQUIREMENT                                 |
 |   💡 RECOMMENDATIONS                                      |
 +-----------------------------------------------------------+
 ```
@@ -70,36 +74,41 @@ The **AI Requirement Gap Detector** provides software engineering teams, product
 2. **Client-Side Guardrails**: Input is checked for presence and whitespace. Empty inputs halt execution with a friendly alert without calling the API.
 3. **Generative AI Reasoning**: The requirement is paired with a specialized system prompt and dispatched to Google GenAI with strict JSON schema enforcement (`types.GenerateContentConfig`).
 4. **Resilient Failover**: If high traffic triggers a 503 spike, the analyzer automatically retries against an optimized fallback model (`gemini-3.5-flash-lite`).
-5. **Pydantic Validation**: The raw JSON payload is parsed and verified by `response_validator.py` ensuring the 5 required fields are lists of strings.
-6. **Polished Display**: Results are presented in five distinct categories with clean bullet points and dividers.
+5. **Pydantic Validation**: The raw JSON payload is parsed and verified by `response_validator.py`, which validates the nine response fields and sanitizes list items.
+6. **Polished Display**: Results are presented in nine distinct, ordered sections, with ambiguities and clarification questions rendered in a structured format.
 
 ---
 
 ## 4. Key Features
 
 - **Real Generative AI Analysis**: Uses genuine LLM reasoning rather than hardcoded heuristics, keyword matching, or NLP parsing trees.
-- **Strict 5-Category Taxonomy**:
+- **Nine-Section Analysis**:
   - 🔴 **HIGH PRIORITY GAPS**: Core transaction failures, unavailable dependencies, or blocker states.
   - 🟡 **MEDIUM PRIORITY GAPS**: Important edge cases (cancellation, modification, timeout handling).
   - 🟢 **LOW PRIORITY GAPS**: Convenience features (re-ordering, history, notification preferences).
   - ⚠️ **MISSING DETAILS**: Explicit parameters missing from the description (payment methods, fee structures, file limits).
+  - 🔍 **AMBIGUITY DETECTION**: Vague terms with explanations and suggested clarifications.
+  - 🧪 **EDGE-CASE DETECTION**: Exceptional or boundary conditions to consider.
+  - ❓ **CLARIFICATION QUESTIONS**: Numbered questions to resolve uncertainty.
+  - ✨ **IMPROVED REQUIREMENT**: An AI-suggested, more specific version of the requirement.
   - 💡 **RECOMMENDATIONS**: Actionable next steps to specify the requirement prior to development.
+- **Light, Responsive Interface**: A centered Streamlit layout with a light background, readable input, and separate pastel-accented result cards.
+- **Input Guardrail**: Submitting a blank requirement displays a centered warning and does not start analysis.
 - **Deterministic Structured JSON**: Direct schema enforcement at the API level guarantees reliable parsing.
 - **Defensive Error Handling**: Typed exception handling for missing keys, invalid credentials, rate limits, and network errors.
-- **One-Click Test Cases**: Pre-built quick-fill buttons for instant interview demonstrations.
 
 ---
 
 ## 5. Technology Stack
 
 - **Language**: Python 3.10+
-- **Frontend / UI**: [Streamlit](https://streamlit.io/)
+- **Frontend / UI**: [Streamlit](https://streamlit.io/) with small, inline CSS enhancements
 - **Generative AI API**: Official Google GenAI SDK (`google-genai`) with Gemini models
 - **Data Validation**: [Pydantic v2](https://docs.pydantic.dev/)
 - **Configuration**: [python-dotenv](https://pypi.org/project/python-dotenv/)
 - **Data Exchange**: JSON
 
-*(No heavy ML frameworks, React, Vue, HTML/CSS hacks, or database bloat).*
+*(No separate JavaScript frontend, heavy ML framework, or database is required.)*
 
 ---
 
@@ -112,7 +121,7 @@ AI-Requirement-Gap-Detector/
 ├── ai_analyzer.py          # AI API communication, fallback handling & model execution
 ├── prompts.py              # System prompt and structured JSON schema definition
 ├── response_validator.py   # Pydantic schema validation & response sanitization
-├── requirements.txt        # Pinned dependencies
+├── requirements.txt        # Project dependencies
 ├── .env                    # Local API credentials (git-ignored)
 ├── .env.example            # Environment template
 ├── .gitignore              # Version control ignore rules
@@ -235,7 +244,7 @@ Customers should be able to transfer money to another bank account.
 ## 10. AI Integration Explanation
 
 - **Contextual Reasoning**: The model assesses requirements through a software architecture perspective rather than searching for hardcoded keywords.
-- **JSON Schema Enforcement**: Using `google.genai.types.GenerateContentConfig(response_mime_type="application/json", response_schema=RESPONSE_SCHEMA)`, the LLM is constrained to output strictly valid JSON matching the exact five keys.
+- **JSON Schema Enforcement**: Using `google.genai.types.GenerateContentConfig(response_mime_type="application/json", response_schema=RESPONSE_SCHEMA)`, the LLM is constrained to output JSON matching the application's nine-field response structure.
 - **Temperature Tuning**: Set to `temperature=0.2` to minimize hallucinations and maximize rigorous, analytical consistency.
 
 ---
